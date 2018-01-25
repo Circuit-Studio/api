@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const logger = require('./logger');
 const app = express();
 
 const {verifyAuth, ignoreFavicon} = require('./routes/middleware');
@@ -38,7 +39,7 @@ app.use('/users', users);
 
 // Start the app and listen on PORT
 app.listen(PORT, () => 
-	console.log(`Express server listening port ${PORT} in mode ${app.settings.env}`)
+	logger.info(`Express server listening on port ${PORT} in mode ${app.settings.env}`)
 );
 
 module.exports = app; // Used for testing

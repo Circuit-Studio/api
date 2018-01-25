@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+const logger = require('../logger');
 
 const User = require('../models/user');
 
@@ -49,10 +50,11 @@ router.post('/register', (req, res) => {
 		}
 	})
 	.catch( err => {
+		logger.error(`Find User Error: ${err}`);
 		return res.status(400)
 			 				.json({
 			 	 				status: 'Failed',
-			 	 				message: `Error: ${err}`
+			 	 				message: 'Something went wrong, please try again.'
 			 				});
 	});
 });
@@ -89,7 +91,7 @@ router.post('/login', (req, res) => {
 		user.comparePassword(password, (err, isMatch) => {
 			if(err) {
 				// Log internal error to console
-				console.log(`Internal Error: ${err}`);
+				logger.error(`Internal Error: ${err}`);
 
 				return res.status(500)
 									.json({
