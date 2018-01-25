@@ -20,7 +20,7 @@ app.use('/auth', login_register);
 // app.use('/components', components);
 
 // Authentication Middleware
-app.use((req, res, next) => verifyAuth(req, res, next));
+app.use(verifyAuth);
 
 // Setup Authenticated Routes
 app.use('/users', users);
