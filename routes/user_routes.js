@@ -8,7 +8,10 @@ router.use(bodyParser.json());
 
 // GET /users
 router.get('/', (req, res) => {
-	res.send(JSON.stringify({message: 'Got all users.'}));
+	return res.status(200)
+						.json({
+							message: 'Got all users.'
+						});
 });
 
 module.exports = router;

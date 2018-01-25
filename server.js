@@ -24,9 +24,6 @@ else {
 }
 
 // Ignore Favicon requests
-// app.get('/favicon.ico', (req, res) => {
-// 	return res.status(204);
-// });
 app.use(ignoreFavicon);
 
 // Setup Unprotected Routes

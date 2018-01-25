@@ -8,10 +8,10 @@ function verifyAuth(req, res, next) {
 
 	if(!authToken) {
 		return res.status(401)
-							.send(JSON.stringify({
+							.json({
 								status: 'Failed',
 								message: 'Unauthorized access. Please check that you are logged in and try again.'
-							}));
+							});
 	}
 
 	// Verify token
@@ -19,10 +19,10 @@ function verifyAuth(req, res, next) {
 		// Handle invalid token
 		if(err) {
 			return res.status(401)
-								.send(JSON.stringify({
+								.json({
 									status: 'Failed',
 									message: 'Unauthorized access. Please check that you are logged in and try again.'
-								}));
+								});
 		}
 
 		// Valid token, continue with request

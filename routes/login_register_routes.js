@@ -16,10 +16,10 @@ router.post('/register', (req, res) => {
 	// Validate no fields are empty
 	if(!username || !password || !email) {
 		return res.status(400)
-							.send(JSON.stringify({ 
+							.json({ 
 								status: 'Failed', 
 								message: 'Cannot have empty fields'
-							}));
+							});
 	}
 
 	// Check whether a user already exists with email or username
@@ -34,26 +34,26 @@ router.post('/register', (req, res) => {
 			user.save();
 
 			// Return the created user
-			res.status(201)
-				 .send(JSON.stringify({
-				 	status: 'Success',
-				 	message: `${username} was created.`
-				 }));
+			return res.status(201)
+				 				.json({
+				 	 				status: 'Success',
+				 	 				message: `${username} was created.`
+				 				});
 		}
 		else {
-			res.status(400)
-				 .send(JSON.stringify({
-				 	status: 'Failed',
-				 	message: 'A user already exists with that username or email address.'
-				 }));
+			return res.status(400)
+				 				.json({
+				 	 				status: 'Failed',
+				 	 				message: 'A user already exists with that username or email address.'
+				 				});
 		}
 	})
 	.catch( err => {
-		res.status(400)
-			 .send(JSON.stringify({
-			 	status: 'Failed',
-			 	message: `Error: ${err}`
-			 }));
+		return res.status(400)
+			 				.json({
+			 	 				status: 'Failed',
+			 	 				message: `Error: ${err}`
+			 				});
 	});
 });
 
@@ -65,10 +65,10 @@ router.post('/login', (req, res) => {
 	// Validate there are no empty fields
 	if(!email || !password) {
 		return res.status(400)
-							.send(JSON.stringify({
+							.json({
 								status: 'Failed',
 								message: 'Cannot have empty fields.'
-							}));
+							});
 	}
 
 	User.findOne({
@@ -79,10 +79,10 @@ router.post('/login', (req, res) => {
 		if(!user) {
 			// Unable to find the user
 			return res.status(400)
-								.send(JSON.stringify({
+								.json({
 									status: 'Failed',
 									message: 'Invalid credentials. Please check credentials and try again.'
-								}));
+								});
 		}
 
 		// Check that the password matches
@@ -92,10 +92,10 @@ router.post('/login', (req, res) => {
 				console.log(`Internal Error: ${err}`);
 
 				return res.status(500)
-									.send(JSON.stringify({
+									.json({
 										status: 'Failed',
 										message: '500 Internal Server Error'
-									}));
+									});
 			}
 
 			// Validate Credentials
@@ -103,19 +103,19 @@ router.post('/login', (req, res) => {
 				// Generate JWT token and return it
 				let token = jwt.sign({ _id: user._id, username: user.username}, process.env.SECRET);
 				return res.status(200)
-									.send(JSON.stringify({
+									.json({
 										status: 'Success',
 										message: `${user.username} successfully logged in.`,
 										token: token
-									}));
+									});
 			}
 			else {
 				// Password did not match (aka. Invalid Credentials)
 				return res.status(400)
-									.send(JSON.stringify({
+									.json({
 										status: 'Failed',
 										message: 'Invalid credentials. Please check credentials and try again.'
-									}));
+									});
 			}
 		});
 	});
