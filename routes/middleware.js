@@ -30,6 +30,18 @@ function verifyAuth(req, res, next) {
 	});
 }
 
-module.exports = {
-	verifyAuth: verifyAuth
-};
+// Used to ignore the Favicon request
+function ignoreFavicon(req, res, next) {
+	if(req.originalUrl === '/favicon.ico') {
+		return res.status(204)
+							.json({
+								status: 'Not Found'
+							});
+	}
+	else {
+		// Just continue for any other request
+		next();
+	}
+}
+
+module.exports = {verifyAuth, ignoreFavicon};
