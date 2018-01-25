@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 
+const {verifyAuth} = require('./routes/middleware');
 const users = require('./routes/user_routes');
 const login_register = require('./routes/login_register_routes');
 
@@ -19,17 +20,7 @@ app.use('/auth', login_register);
 // app.use('/components', components);
 
 // Authentication Middleware
-app.use((req, res, next) => {
-	let authToken = req.get('Authorization');
-
-	if(!authToken) {
-		return res.status(401)
-							.send(JSON.stringify({
-								status: 'Failed',
-								message: 'Unauthorized access. Please check that you are logged in and try again.'
-							}));
-	}
-});
+app.use((req, res, next) => verifyAuth(req, res, next));
 
 // Setup Authenticated Routes
 app.use('/users', users);
