@@ -14,15 +14,6 @@ router.post('/register', (req, res) => {
 	let password = req.body.password;
 	let email = req.body.email;
 
-	// Validate no fields are empty
-	if(!username || !password || !email) {
-		return res.status(400)
-							.json({ 
-								status: 'Failed', 
-								message: 'Cannot have empty fields'
-							});
-	}
-
 	// Check whether a user already exists with email or username
 	User.findOne({
 		$or: [{email: email},
@@ -32,14 +23,30 @@ router.post('/register', (req, res) => {
 		// If user is nil, continue with creation
 		if(!user) {
 			let user = new User(req.body);
-			user.save();
 
-			// Return the created user
-			return res.status(201)
-				 				.json({
-				 	 				status: 'Success',
-				 	 				message: `${username} was created.`
-				 				});
+			// Save will attempt to validate properties
+			user.save((err) => {
+				// If validation failed, return reason why
+				if(err) {
+					errorMessages = []
+					for(var key in err['errors']) {
+						errorMessages.push(err['errors'][key]['message']);
+					}
+					return res.status(400)
+										.json({
+											status: 'Failed',
+											message: errorMessages
+										});
+				}
+				else {
+					// Success, return proper message
+					return res.status(201)
+				 						.json({
+				 	 						status: 'Success',
+				 	 						message: `${username} was created.`
+				 						});
+				}
+			});
 		}
 		else {
 			return res.status(400)

@@ -1,13 +1,32 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const {isEmail} = require('validator');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
 	createdAt: { type: Date },
 	updatedAt: { type: Date },
-	password:  { type: String, required: true, select: false },
-	username:  { type: String, required: true},
-	email:     { type: String, required: true}
+	password: { 
+        type: String, 
+        required: true,
+        minlength: [6, 'Password is too short.'],
+        select: false 
+    },
+	username: { 
+        type: String, 
+        required: true,
+        minlength: [8, 'Username is too short.']
+    },
+	email: { 
+        type: String,
+        validate: {
+            validator: function(v) {
+                return isEmail(v);
+            },
+            message: 'Not a valid email address.'
+        },
+        required: true
+    }
 });
 
 // Updated/Created
