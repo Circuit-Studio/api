@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
-const logger = require('../logger');
+const logger = require('../utils/logger');
 
 const User = require('../models/user');
 
