@@ -18,7 +18,6 @@ app.use(ignoreFavicon);
 
 // Setup Unprotected Routes
 app.use('/auth', login_register);
-// app.use('/components', components);
 
 // Authentication Middleware
 app.use(verifyAuth);
