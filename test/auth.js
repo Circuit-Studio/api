@@ -28,7 +28,7 @@ describe('Authentication', () => {
 	/*
 	 *  Test Registering a New User
 	 */
-	describe('/POST /auth/register', () => {
+	describe('POST /auth/register', () => {
 
 		context('should not create a new user if', () => {
 			it('username is missing', (done) => {
@@ -178,7 +178,7 @@ describe('Authentication', () => {
 	/*
 	 *  Test Logging in a User
 	 */
-	describe("/POST /auth/login", () => {
+	describe('POST /auth/login', () => {
 		let user = new User({ 
 			username: 'test-user',
 			email: 'user@mail.com',
@@ -199,10 +199,15 @@ describe('Authentication', () => {
 								res.should.have.status(200);
 								res.body.should.be.a('object');
 								res.body.should.have.property('status').eql('Success');
-								res.body.should.have.property('token');
-								res.body.token.should.be.a('String');
 								res.body.should.have.property('message').that
 																		.contains('test-user successfully logged in.')
+								res.body.should.have.property('data');
+								res.body.data.should.have.property('token');
+								res.body.data.token.should.be.a('String');
+								res.body.data.should.have.property('username');
+								res.body.data.username.should.be.a('String');
+								res.body.data.should.have.property('id');
+								res.body.data.id.should.be.a('String');
 								done();
 							});
 				});

@@ -1,12 +1,13 @@
 const jwt = require('jsonwebtoken');
+const logger = require('../utils/logger');
 
 // Authentication Middleware
 function verifyAuth(req, res, next) {
 	// Grab the Auth header, and get just the token portion
-	// Header format: Authorization: Bearer [token]
+	// Header format: Authorization: [token]
 	let authToken = req.get('Authorization');
 
-	if(!authToken) {
+	if (!authToken) {
 		return res.status(401)
 							.json({
 								status: 'Failed',
@@ -17,7 +18,7 @@ function verifyAuth(req, res, next) {
 	// Verify token
 	jwt.verify(authToken, process.env.SECRET, (err, token) => {
 		// Handle invalid token
-		if(err) {
+		if (err) {
 			return res.status(401)
 								.json({
 									status: 'Failed',
@@ -32,7 +33,7 @@ function verifyAuth(req, res, next) {
 
 // Used to ignore the Favicon request
 function ignoreFavicon(req, res, next) {
-	if(req.originalUrl === '/favicon.ico') {
+	if (req.originalUrl === '/favicon.ico') {
 		return res.status(204)
 							.json({
 								status: 'Not Found'
