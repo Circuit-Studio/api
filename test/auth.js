@@ -150,6 +150,56 @@ describe('Authentication', () => {
 							done();
 						});
 			});
+
+			it('a user already exists with that username', (done) => {
+				let user = new User({
+					username: 'username',
+					email: 'user@mail.com',
+					password: 'password'
+				});
+
+				user.save((err) => {
+					chai.request(server)
+							.post('/auth/register')
+							.send({
+								username: user.username,
+								email: 'mail@mail.com',
+								password: 'password'
+							})
+							.end((err, res) => {
+								res.should.have.status(403);
+								res.body.should.have.property('status').eql('Forbidden');
+								res.body.should.have.property('message').that
+																		.contains('A user already exists with that username or email address.');
+								done();
+							});
+				});
+			});
+
+			it('a user already exists with that email', (done) => {
+				let user = new User({
+					username: 'username',
+					email: 'user@mail.com',
+					password: 'password'
+				});
+
+				user.save((err) => {
+					chai.request(server)
+							.post('/auth/register')
+							.send({
+								username: 'user-name',
+								email: user.email,
+								password: 'password'
+							})
+							.end((err, res) => {
+								res.should.have.status(403);
+								res.body.should.have.property('status').eql('Forbidden');
+								res.body.should.have.property('message').that
+																		.contains('A user already exists with that username or email address.');
+								done();
+							});
+				});
+			});
 		});
 		
 		context('should create a new user if', () => {

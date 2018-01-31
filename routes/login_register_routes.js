@@ -49,9 +49,9 @@ router.post('/register', (req, res) => {
 			});
 		}
 		else {
-			return res.status(400)
+			return res.status(403)
 				 				.json({
-				 	 				status: 'Failed',
+				 	 				status: 'Forbidden',
 				 	 				message: 'A user already exists with that username or email address.'
 				 				});
 		}
