@@ -10,7 +10,7 @@ require('dotenv').config();
 
 // Only use logs when not testing
 if(process.env.NODE_ENV !== 'test') {
-	app.use(morgan('combined')); 
+  app.use(morgan('combined')); 
 }
 
 // Ignore Favicon requests

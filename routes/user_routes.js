@@ -30,7 +30,15 @@ router.get('/', (req, res) => {
 
 // GET /users/:id
 router.get('/:id', (req, res) => {
-	User.findById(req.params.id, '_id username email', (err, user) => {
+	if (isAuthorized(req) == false) {
+		return res.status(404)
+							.json({
+								status: 'Not Found',
+								message: 'Could not find user. Please check id and try again.'
+							});
+	}
+
+	User.findById(req.user._id, '_id username email', (err, user) => {
 		if (err) {
 			return res.status(500)
 				 				.json({
@@ -39,9 +47,9 @@ router.get('/:id', (req, res) => {
 				 				});
 		}
 		else if (user == undefined) {
-			return res.status(400)
+			return res.status(404)
 								.json({
-									status: 'Failed',
+									status: 'Not Found',
 									message: 'Could not find user. Please check id and try again.'
 								});
 		}
@@ -55,5 +63,24 @@ router.get('/:id', (req, res) => {
 		}
 	});
 });
+
+// DELETE /users/:id
+router.delete('/:id', (req, res) => {
+	// Verify that 
+	User.findByIdAndRemove(req.params.id, (err) => {
+
+	})
+});
+
+// Verifies user is allowed to make request
+function isAuthorized(req) {
+	// User is not authorized
+	if (req.params.id !== req.user._id) {
+		return false
+	}
+
+	// User is authorized to perform action
+	return true
+}
 
 module.exports = router;
