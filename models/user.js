@@ -6,6 +6,10 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   createdAt: { type: Date },
   updatedAt: { type: Date },
+  active: { 
+    type: Boolean,
+    default: true
+  },
   password: { 
     type: String, 
     required: true,
@@ -15,7 +19,7 @@ const UserSchema = new Schema({
   username: { 
     type: String, 
     required: true,
-    minlength: [8, 'Username is too short.']
+    minlength: [6, 'Username is too short.']
   },
   email: { 
     type: String,

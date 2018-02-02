@@ -11,18 +11,18 @@ chai.use(chaiHttp);
 
 // Setup test db
 before((done) => {
-  db_connect.open().then(() => { done() }).catch(done);
+  db_connect.open().then(() => { done(); }).catch(done);
 });
 
 // Tear down test db
 after((done) => {
-  db_connect.close().then(() => { done() }).catch(done);
+  db_connect.close().then(() => { done(); }).catch(done);
 });
 
 describe('Authentication', () => {
   // Reset database before each test
   beforeEach((done) => {
-    User.remove({}, (err) => { done() });
+    User.remove({}, (err) => { done(); });
   });
 
   /*
@@ -36,7 +36,7 @@ describe('Authentication', () => {
           username: '',
           email: 'user@gmail.com',
           password: 'password'
-        }
+        };
 
         chai.request(server)
             .post('/auth/register')
@@ -56,7 +56,7 @@ describe('Authentication', () => {
           username: 'test-user',
           email: '',
           password: 'password'
-        }
+        };
 
         chai.request(server)
             .post('/auth/register')
@@ -76,7 +76,7 @@ describe('Authentication', () => {
           username: 'test-user',
           email: 'user@gmail.com',
           password: ''
-        }
+        };
 
         chai.request(server)
             .post('/auth/register')
@@ -96,7 +96,7 @@ describe('Authentication', () => {
           username: 'test',
           email: 'user@gmail.com',
           password: 'password'
-        }
+        };
 
         chai.request(server)
             .post('/auth/register')
@@ -116,7 +116,7 @@ describe('Authentication', () => {
           username: 'test-user',
           email: 'user@gmail.com',
           password: 'pass'
-        }
+        };
 
         chai.request(server)
             .post('/auth/register')
@@ -136,7 +136,7 @@ describe('Authentication', () => {
           username: 'test-user',
           email: 'user@mail',
           password: 'password'
-        }
+        };
 
         chai.request(server)
             .post('/auth/register')
@@ -208,7 +208,7 @@ describe('Authentication', () => {
           username: 'test-user',
           email: 'user@gmail.com',
           password: 'password'
-        }
+        };
 
         chai.request(server)
             .post('/auth/register')
@@ -250,7 +250,7 @@ describe('Authentication', () => {
                 res.body.should.be.a('object');
                 res.body.should.have.property('status').eql('Success');
                 res.body.should.have.property('message');
-                res.body.message.should.contain('test-user successfully logged in.')
+                res.body.message.should.contain('test-user successfully logged in.');
                 res.body.should.have.property('data');
                 res.body.data.should.have.property('token');
                 res.body.data.should.have.property('username');
@@ -261,7 +261,7 @@ describe('Authentication', () => {
       });
     });
 
-    context('should return bad request if', () => {
+    context('should return unauthorized request if', () => {
       it('email does not match a user\'s email', (done) => {
         user.save((err, saved_user) => {
           chai.request(server)
@@ -272,11 +272,11 @@ describe('Authentication', () => {
                 password: 'password'
               })
               .end((err, res) => {
-                res.should.have.status(400);
+                res.should.have.status(401);
                 res.body.should.be.a('object');
-                res.body.should.have.property('status').eql('Failed');
+                res.body.should.have.property('status').eql('Unauthorized');
                 res.body.should.have.property('message');
-                res.body.message.should.contain('Invalid credentials. Please check credentials and try again.');
+                res.body.message.should.contain('Please check credentials and try again.');
                 done();
               });
         });
@@ -292,11 +292,11 @@ describe('Authentication', () => {
                 password: 'wrong'
               })
               .end((err, res) => {
-                res.should.have.status(400);
+                res.should.have.status(401);
                 res.body.should.be.a('object');
-                res.body.should.have.property('status').eql('Failed');
+                res.body.should.have.property('status').eql('Unauthorized');
                 res.body.should.have.property('message');
-                res.body.message.should.contain('Invalid credentials. Please check credentials and try again.');
+                res.body.message.should.contain('Please check credentials and try again.');
                 done();
               });
         });

@@ -15,9 +15,9 @@ function open() {
       }).catch(reject);
     }
     else {
-      let db_url = process.env.MONGODB_URI || 'mongodb://localhost/circuit-studio-api'
+      let db_url = process.env.MONGODB_URI || 'mongodb://localhost/circuit-studio-api';
       mongoose.connect(db_url, (err) => {
-        if (err) { return reject(err) };
+        if (err) { return reject(err); }
         resolve();
       });
     }
