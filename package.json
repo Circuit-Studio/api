@@ -4,7 +4,7 @@
   "description": "The API for Circuit Studio mobile and web.",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node index.js",
     "test": "mocha --timeout 120000 --exit"
   },
   "repository": "git@github.com:Circuit-Studio/api.git",
