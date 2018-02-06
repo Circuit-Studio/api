@@ -10,7 +10,7 @@ require('dotenv').config();
 
 // Only use logs when not testing
 if(process.env.NODE_ENV !== 'test') {
-	app.use(morgan('combined')); 
+  app.use(morgan('combined')); 
 }
 
 // Ignore Favicon requests
@@ -18,7 +18,6 @@ app.use(ignoreFavicon);
 
 // Setup Unprotected Routes
 app.use('/auth', login_register);
-// app.use('/components', components);
 
 // Authentication Middleware
 app.use(verifyAuth);
