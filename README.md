@@ -1,3 +1,3 @@
-# Circuit Studio API
+# Circuit Studio API [![Maintainability](https://api.codeclimate.com/v1/badges/bbadefe8b9ba2b96e05c/maintainability)](https://codeclimate.com/github/Circuit-Studio/api/maintainability)[![Test Coverage](https://api.codeclimate.com/v1/badges/bbadefe8b9ba2b96e05c/test_coverage)](https://codeclimate.com/github/Circuit-Studio/api/test_coverage)
 
 There will be something cool here eventually...
