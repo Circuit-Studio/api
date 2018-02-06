@@ -56,13 +56,20 @@ router.get('/:id', (req, res) => {
 			});
 		}
 	});
-})
+});
 
 // DELETE /users/:id
 // In reality this route deactives the user rather than deleting them
-router.delete('/users/:id', (req, res) => {
-	// Verify that 
-	User.findByIdAndModify(req.params.id, { $set: { active: false }}, (err) => {
+router.delete('/:id', (req, res) => {
+	// Verify that user can perform action
+  if (isAuthorized(req) == false) {
+    return res.status(404).json({
+      status: 'User Not Found',
+      message: 'Please check id and try again.'
+    });
+  }
+
+	User.findByIdAndUpdate(req.params.id, { active: false }, (err) => {
     if (err) {
       return res.status(500).json({
         status: 'Internal Error',
@@ -71,16 +78,16 @@ router.delete('/users/:id', (req, res) => {
     }
 
     // Successfully "deleted" resource
-    return res.status(204).json({
+    return res.status(200).json({
       status: 'No Content',
-      message: 'Resource was deleted.'
+      message: 'User was deleted.'
     });
 	});
 });
 
 // Verifies user is allowed to make request
 function isAuthorized(req) {
-  return req.params.id == req.user._id
+  return req.params.id == req.user._id;
 }
 
 module.exports = router;

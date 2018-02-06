@@ -29,6 +29,45 @@ describe('Users', () => {
     User.remove({}, (err) => { done(); });
   });
 
+  // ===========================
+  //
+  //  Test Unauthorized Request
+  //  
+  // ===========================
+  
+  describe('Request Authorization', () => {
+    let user = new User({
+      username: 'username',
+      email: 'mail@mail.com',
+      password: 'password'
+    });
+
+    let alt_user = new User({
+      username: 'alt-user',
+      email: 'alt@mail.com',
+      password: 'password'
+    });
+
+    context('jwt user does not match resource path user', () => {
+      it('should return a Not Found response', (done) => {
+        user.save().then(() => {
+          return alt_user.save();
+        }).then((alt_user) => {
+          chai.request(server)
+              .get('/users/' + alt_user._id)
+              .set('Authorization', createTestToken(user))
+              .end((err, res) => {
+                res.should.have.status(404);
+                res.body.should.have.property('status').eql('User Not Found');
+                res.body.should.have.property('message');
+                res.body.message.should.contain('Please check id and try again.');
+                done();
+              });
+        });
+      });
+    });
+  });
+
   // ========================
   //
   //  Test Fetching All Users
@@ -194,9 +233,12 @@ describe('Users', () => {
 
   });
 
-  /*
-   *  Test Deleting A User
-   */
+  // ============================
+  //
+  //  Test Deleting Specific User
+  //  
+  // ============================
+  
   describe('DELETE /users/:id', () => {
     beforeEach((done) => {
       user = new User({
@@ -215,12 +257,15 @@ describe('Users', () => {
               .delete('/users/' + saved_user._id)
               .set('Authorization', authToken)
               .end((err, res) => {
-                res.should.have.status(204);
+                res.should.have.status(200);
                 res.body.should.have.property('status').eql('No Content');
                 res.body.should.have.property('message');
                 res.body.message.should.contain('User was deleted.');
-                saved_user.active.should.eql(false);
-                done();
+
+                User.findById(saved_user._id, (err, updated_user) => {
+                  updated_user.active.should.eql(false);
+                  done();
+                });
               });
         });
       });
