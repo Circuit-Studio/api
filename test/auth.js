@@ -25,9 +25,12 @@ describe('Authentication', () => {
     User.remove({}, (err) => { done(); });
   });
 
-  /*
-   *  Test Registering a New User
-   */
+  // ============================
+  //
+  //  Test Registering a New User
+  //  
+  // ============================
+  
   describe('POST /auth/register', () => {
 
     context('should not create a new user if', () => {
@@ -107,6 +110,26 @@ describe('Authentication', () => {
               res.body.should.have.property('status').eql('Failed');
               res.body.should.have.property('message');
               res.body.message.should.contain('Username is too short.');
+              done();
+            });
+      });
+
+      it('username is too long', (done) => {
+        let user = {
+          username: 'aaaaaaaaaaaaaaaaaaa',
+          email: 'user@gmail.com',
+          password: 'password'
+        };
+
+        chai.request(server)
+            .post('/auth/register')
+            .send(user)
+            .end((err, res) => {
+              res.should.have.status(400);
+              res.body.should.be.a('object');
+              res.body.should.have.property('status').eql('Failed');
+              res.body.should.have.property('message');
+              res.body.message.should.contain('Username is too long.');
               done();
             });
       });
@@ -224,10 +247,13 @@ describe('Authentication', () => {
       });
     });
   });
+  
+  // ========================
+  //
+  //  Test Logging in a User
+  //  
+  // ========================
 
-  /*
-   *  Test Logging in a User
-   */
   describe('POST /auth/login', () => {
     let user = new User({ 
       username: 'test-user',

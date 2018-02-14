@@ -19,7 +19,8 @@ const UserSchema = new Schema({
   username: { 
     type: String, 
     required: true,
-    minlength: [6, 'Username is too short.']
+    minlength: [6, 'Username is too short.'],
+    maxlength: [18, 'Username is too long.']
   },
   email: { 
     type: String,
